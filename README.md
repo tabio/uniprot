@@ -11,12 +11,12 @@ uniprotについては[こちら](http://www.uniprot.org/)からアクセスで�
  
 ### その他 ###
 > php aaa.php args1 (args2, ...)
->
-> > [uniprot accession number]  
-> > |__ [phospho]  ___ [position]  
-> > |                      |__ [reference]  
-> > |                      |__ [reference]  
-> > |__ [snip]     ___ [position]  
-> > |                      |__ [reference]  
-> > |__ [sequence]
+
+    [uniprot accession number]  
+    |__ [phospho]  ___ [position]  
+    |                      |__ [reference]  
+    |                      |__ [reference]  
+    |__ [snip]     ___ [position]  
+    |                      |__ [reference]  
+    |__ [sequence]
  

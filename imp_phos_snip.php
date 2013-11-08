@@ -1,6 +1,26 @@
 <?php
+/**
+ * Website: https://github.com/tabio/uniprot
+ * 
+ * This program is to get phosphorylation and snip information for target protein on Uniprot web site.
+ *
+ * [Step 1]
+ *   get ncbi accession number of target protein from your database.
+ *
+ * [Step 2]
+ *   transfer ncbi accession number to uniprot accesssion number.
+ *
+ * [Step 3]
+ *   get phosphorylation and snip information for annotated target protin.
+ *
+ * @auther  tabio <https://github.com/tabio
+ * @version 1.0
+ */
+
+// pear install HTTP_Request
 require_once('HTTP/Request.php');
 
+// set database object
 function set_db() {
   $pdo    = array();
   $dsn    = 'localhost';
@@ -20,6 +40,7 @@ function set_db() {
   return $pdo;
 }
 
+// set Http_Request object
 function set_http_obj($url) {
   $opt = array(
     'proxy_host' => 'hoge.co.jp',
@@ -36,10 +57,12 @@ function set_http_obj($url) {
   return $http; 
 }
 
+// replace target strings
 function str_rep($str) {
   return trim(str_replace(array("\n","\r\n","\r"), '', $str));
 }
 
+// get accession information from uniprot
 function ncbi2uniprot($np_acc) {
   $results = array();
 
@@ -74,6 +97,7 @@ function ncbi2uniprot($np_acc) {
   return $results;
 }
 
+// clear off reference data
 function evi2pubmed($evi_keys='', $pubmeds=array()) {
   $res = '';
   if (preg_match('/^ref/', $evi_keys)) {
@@ -88,6 +112,7 @@ function evi2pubmed($evi_keys='', $pubmeds=array()) {
   return $res;
 }
 
+// get phosphorylation and snip information from uniprot
 function get_phos_snip($arr_uni_acc) {
   $info = array();
   foreach ($arr_uni_acc as $uni_acc) {
@@ -155,10 +180,13 @@ function get_phos_snip($arr_uni_acc) {
   return $info;
 }
 
-// 0 -> none
-// 1 -> probable
-// 2 -> pubmed ids
-// 3 -> reference number
+/**
+ * change phosphorylation and snip status to easy flags
+ * 0 -> none
+ * 1 -> probable
+ * 2 -> pubmed ids
+ * 3 -> reference number
+*/
 function get_status_type($ref_str='', $status='') {
   $flg = 0;
   if (empty($ref_str)) {
@@ -169,6 +197,7 @@ function get_status_type($ref_str='', $status='') {
   return $flg;
 }
 
+// regist database
 function reg_target_info($np_acc, $info=array()) {
   echo "---> $np_acc\n";
 
@@ -254,10 +283,10 @@ function reg_target_info($np_acc, $info=array()) {
   }
 }
 
+// get ncbi accession number of target protein from ncbi
 function get_np_acc() {
   $res = array();
-  $sql = 'select gene_acc_no from mrm_proteins group by gene_acc_no';
-  //$sql = "select gene_acc_no from mrm_proteins where gene_acc_no = 'NP_001092' group by gene_acc_no";
+  $sql = 'select gene_acc_no from proteins group by gene_acc_no';
 
   try {
     $dbh  = set_db();
@@ -274,14 +303,13 @@ function get_np_acc() {
   return $res;
 }
 
+// main
 function main() {
   echo "[start] program =========>\n";
 
   // get ncbi accession numbers
   $np_acc_arr = get_np_acc();
 
-  //$np_acc  = 'NP_002037';
-  //$np_acc  = 'NP_001092';
   foreach($np_acc_arr as $val) {
     sleep(3);
 

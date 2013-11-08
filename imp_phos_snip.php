@@ -228,6 +228,8 @@ function reg_target_info($np_acc, $info=array()) {
       if (!$stmt_chg->execute()) throw new Exception('query execute error');
 
     } catch(PDOException $e) {
+      echo "error t_chg_acc\n";
+    } catch(Exception $e) {
       echo "error insert t_chg_acc\n";
     }
 
@@ -257,6 +259,8 @@ function reg_target_info($np_acc, $info=array()) {
       }
 
     } catch(PDOException $e) {
+      echo "error t_acc_phospho\n";
+    } catch(Exception $e) {
       echo "error insert t_acc_phospho\n";
     }
 
@@ -277,6 +281,8 @@ function reg_target_info($np_acc, $info=array()) {
         }
       }
     } catch(PDOException $e) {
+      echo "error t_acc_snip\n";
+    } catch(Exception $e) {
       echo "error insert t_acc_snip\n";
     }
     
@@ -297,6 +303,9 @@ function get_np_acc() {
     $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   } catch(PDOException $e) {
+    var_dump($e->getMessage());
+    exit;
+  } catch(Exception $e) {
     var_dump($e->getMessage());
     exit;
   }

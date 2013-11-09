@@ -43,11 +43,11 @@ function set_db() {
 // set Http_Request object
 function set_http_obj($url) {
   $opt = array(
-    'proxy_host' => 'hoge.co.jp',
-    'proxy_port' => 8080,
-    'timeout' => 10,
+    'proxy_host'     => 'hoge.co.jp',
+    'proxy_port'     => 8080,
+    'timeout'        => 10,
     'allowRedirects' => true,
-    'maxRedirects' => 1
+    'maxRedirects'   => 1
   );
 
   $http = new HTTP_Request($url, $opt);
@@ -64,19 +64,17 @@ function str_rep($str) {
 
 // get accession information from uniprot
 function ncbi2uniprot($np_acc) {
-  $results = array();
-
-  $url = 'http://www.uniprot.org/uniprot/?query='.$np_acc.'+AND+reviewed%3Ayes&sort=score';
-  
-  $http = set_http_obj($url);
+  $results  = array();
+  $url      = 'http://www.uniprot.org/uniprot/?query='.$np_acc.'+AND+reviewed%3Ayes&sort=score';
+  $http     = set_http_obj($url);
   $response = $http->sendRequest();
   
   if (!PEAR::isError($response)) {
     $data = $http->getResponseBody();
     $config = array(
-      'indent' => TRUE,
+      'indent'       => TRUE,
       'output-xhtml' => TRUE,
-      'wrap' => 200
+      'wrap'         => 200
     );
     $tidy = tidy_parse_string($data, $config, 'UTF8');
     $tidy->cleanRepair();
@@ -119,7 +117,7 @@ function get_phos_snip($arr_uni_acc) {
 
     $info[$uni_acc] = array();
 
-    $url = sprintf('http://www.uniprot.org/uniprot/%s.xml', $uni_acc);
+    $url  = sprintf('http://www.uniprot.org/uniprot/%s.xml', $uni_acc);
     $http = set_http_obj($url);
     $response = $http->sendRequest();
     $response = $http->sendRequest();

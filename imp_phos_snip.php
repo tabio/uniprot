@@ -30,6 +30,8 @@ define('PROXY_PORT', 8080);
 //---- blowser
 define('U_AGENT', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)');
 define('REFERER', 'http://github.com');
+//---- etc
+define('SLEEP_COUNT', 10);
 
 // pear install HTTP_Request
 require_once('HTTP/Request.php');
@@ -342,7 +344,7 @@ function main($file='') {
   $np_acc_arr = get_np_acc($file);
 
   foreach($np_acc_arr as $val) {
-    sleep(3);
+    sleep(SLEEP_COUNT);
 
     // initialize
     $np_acc  = '';

@@ -17,47 +17,59 @@
  * @version 1.0
  */
 
+// define
+//---- database
+define('DSN',        'localhost');
+define('DB_USER',    'root');
+define('DB_PASS',    '');
+define('DB_NAME',    'uniprot');
+//---- proxy
+define('IS_PROXY',   false);
+define('PROXY_HOST', 'hoge.co.jp');
+define('PROXY_PORT', 8080);
+//---- blowser
+define('U_AGENT', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)');
+define('REFERER', 'http://github.com');
+
 // pear install HTTP_Request
 require_once('HTTP/Request.php');
 
 // set database object
 function set_db() {
   $pdo    = array();
-  $dsn    = 'localhost';
-  $user   = 'root';
-  $pass   = '';
-  $dbname = 'hoge';
 
   try {
-    $conn = sprintf('mysql:host=%s;dbname=%s', $dsn, $dbname);
-    $pdo  = new PDO($conn, $user, $pass);
+    $conn = sprintf('mysql:host=%s;dbname=%s', DSN, DB_NAME);
+    $pdo  = new PDO($conn, DB_USER, DB_PASS);
     $pdo->query('SET NAMES utf8');
   } catch(PDOException $e) {
     var_dump($e->getMessage());
     exit;
   }
-
   return $pdo;
 }
 
 // set Http_Request object
 function set_http_obj($url) {
   $opt = array(
-    'proxy_host'     => 'hoge.co.jp',
-    'proxy_port'     => 8080,
     'timeout'        => 10,
     'allowRedirects' => true,
     'maxRedirects'   => 1
   );
 
+  if (IS_PROXY) {
+    $opt['proxy_host'] = PROXY_HOST;
+    $opt['proxy_port'] = PROXY_PORT;
+  }
+
   $http = new HTTP_Request($url, $opt);
-  $http->addHeader('User-Agent', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)');
-  $http->addHeader('Referer', 'http://www.yahoo.co.jp');
+  $http->addHeader('User-Agent', U_AGENT);
+  $http->addHeader('Referer',    REFERER);
 
   return $http; 
 }
 
-// replace target strings
+// delete target strings
 function str_rep($str) {
   return trim(str_replace(array("\n","\r\n","\r"), '', $str));
 }
@@ -223,12 +235,12 @@ function reg_target_info($np_acc, $info=array()) {
       $stmt_chg->bindParam(2, $key,             PDO::PARAM_STR);
       $stmt_chg->bindParam(3, $val['sequence'], PDO::PARAM_STR);
 
-      if (!$stmt_chg->execute()) throw new Exception('query execute error');
+      if (!$stmt_chg->execute()) throw new Exception("query execute error\n");
 
     } catch(PDOException $e) {
-      echo "error t_chg_acc\n";
+      echo "error t_chg_acc => ".$e->getMessage();
     } catch(Exception $e) {
-      echo "error insert t_chg_acc\n";
+      echo "error insert t_chg_acc => ".$e->getMessage();
     }
 
     //------ insert t_acc_phospho
@@ -251,15 +263,15 @@ function reg_target_info($np_acc, $info=array()) {
             $stmt_phos->bindParam(4, $tmp['pubmed_id'], PDO::PARAM_STR);
             $stmt_phos->bindParam(5, $status,           PDO::PARAM_INT);
 
-            if (!$stmt_phos->execute()) throw new Exception('query execute error');
+            if (!$stmt_phos->execute()) throw new Exception("query execute error\n");
           }
         }
       }
 
     } catch(PDOException $e) {
-      echo "error t_acc_phospho\n";
+      echo "error t_acc_phospho => ".$e->getMessage();
     } catch(Exception $e) {
-      echo "error insert t_acc_phospho\n";
+      echo "error insert t_acc_phospho => ".$e->getMessage();
     }
 
     //----- insert t_acc_snip
@@ -275,47 +287,59 @@ function reg_target_info($np_acc, $info=array()) {
           $stmt_snip->bindParam(5, $tmp['pubmed_id'], PDO::PARAM_STR);
           $stmt_snip->bindParam(6, $status,           PDO::PARAM_INT);
 
-          if (!$stmt_snip->execute()) throw new Exception('query execute error');
+          if (!$stmt_snip->execute()) throw new Exception("query execute error\n");
         }
       }
     } catch(PDOException $e) {
-      echo "error t_acc_snip\n";
+      echo "error t_acc_snip =>".$e->getMessage();
     } catch(Exception $e) {
-      echo "error insert t_acc_snip\n";
+      echo "error insert t_acc_snip =>".$e->getMessage();
     }
     
   }
 }
 
 // get ncbi accession number of target protein from ncbi
-function get_np_acc() {
+function get_np_acc($file='') {
   $res = array();
-  $sql = 'select gene_acc_no from proteins group by gene_acc_no';
-
   try {
-    $dbh  = set_db();
-    $stmt = $dbh->prepare($sql);
+    if ($file) {
+      $fp = fopen($file, 'r');
+      while (!feof($fp)) {
+        $line = fgets($fp);
+        $line = trim($line);
+        if (empty($line)) continue;
 
-    if (!$stmt->execute()) throw new Exception('query execute error');
+        // check format
+        $cnt  = count(preg_split('/(\s|\t|,)/', $line, -1, PREG_SPLIT_NO_EMPTY));
+        if ($cnt > 1) throw new Exception("file format error\n");
 
-    $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        // add array
+        array_push($res, array('gene_acc_no' => $line));
+      }
+    } else {
+      $sql = 'select gene_acc_no from proteins group by gene_acc_no';
+      $dbh  = set_db();
+      $stmt = $dbh->prepare($sql);
+      if (!$stmt->execute()) throw new Exception("query execute error\n");
+      $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
   } catch(PDOException $e) {
-    var_dump($e->getMessage());
+    echo $e->getMessage();
     exit;
   } catch(Exception $e) {
-    var_dump($e->getMessage());
+    echo $e->getMessage();
     exit;
   }
   return $res;
 }
 
 // main
-function main() {
+function main($file='') {
   echo "[start] program =========>\n";
 
   // get ncbi accession numbers
-  $np_acc_arr = get_np_acc();
+  $np_acc_arr = get_np_acc($file);
 
   foreach($np_acc_arr as $val) {
     sleep(3);
@@ -341,5 +365,17 @@ function main() {
   echo "[end]   program <=========\n";
 }
 
-main();
+//-- check argument
+$opt = getopt('f:');
+if (isset($opt['f']) && !empty($opt['f'])) {
+  if (file_exists($opt['f'])) {
+    $is_file = true;
+  } else {
+    echo "[warning] check args!!\n";
+    echo "php ".__FILE__." -f file path\n";
+    exit(1);
+  }
+}
+main($opt['f']);
+
 ?>

@@ -3,6 +3,9 @@
  * [Summary]
  *   This program is to get phosphorylation and snp information for target protein on Uniprot web site.
  *
+ * [Usage]
+ *  php imp_phos_snp.php [-f file path] 
+ *  
  * [Step 1]
  *   set ncbi accession number lists of target proteins from your database or file.
  *   => see ddl file (mysql_tbl.ddl) if you want to use mysql database.

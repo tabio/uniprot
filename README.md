@@ -9,6 +9,7 @@ uniprotについては[こちら](http://www.uniprot.org/)からアクセスで�
 - 対象のタンパクのリン酸化・SNP情報の取得プログラム
   + NCBIのAccession NumberをuniprotのAccession Numberに変換
   + 対象のタンパクに対するリン酸化の情報、SNPの情報を取得
+  + 取得した情報はmysqlのtable(mysql_tbl.ddlを参照)に登録する想定
 
 > php imp_phos_snp.php args1 (args2, ...)
 

@@ -1,8 +1,7 @@
 <?php
 /**
- * Website: https://github.com/tabio/uniprot
- * 
- * This program is to get phosphorylation and snip information for target protein on Uniprot web site.
+ * [Summary]
+ *   This program is to get phosphorylation and snip information for target protein on Uniprot web site.
  *
  * [Step 1]
  *   set ncbi accession number lists of target proteins from your database or file.
@@ -14,6 +13,8 @@
  *   ==>  get phosphorylation and snip information for annotated target protin.
  *   ===> regist these infomation on your database.
  *
+ * [Etc.]
+ * @link    https://github.com/tabio/uniprot
  * @auther  tabio <tabio.github@gmail.com>
  * @version 1.0
  */

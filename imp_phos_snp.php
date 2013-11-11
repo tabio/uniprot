@@ -1,7 +1,7 @@
 <?php
 /**
  * [Summary]
- *   This program is to get phosphorylation and snip information for target protein on Uniprot web site.
+ *   This program is to get phosphorylation and snp information for target protein on Uniprot web site.
  *
  * [Step 1]
  *   set ncbi accession number lists of target proteins from your database or file.
@@ -10,7 +10,7 @@
  * [Step 2]
  *   execute this script.
  *   =>   transfer ncbi accession number to uniprot accesssion number.
- *   ==>  get phosphorylation and snip information for annotated target protin.
+ *   ==>  get phosphorylation and snp information for annotated target protin.
  *   ===> regist these infomation on your database.
  *
  * [Etc.]
@@ -86,7 +86,7 @@ function ncbi2uniprot($np_acc) {
   $response = $http->sendRequest();
   
   if (!PEAR::isError($response)) {
-    $data = $http->getResponseBody();
+    $data   = $http->getResponseBody();
     $config = array(
       'indent'       => TRUE,
       'output-xhtml' => TRUE,
@@ -126,8 +126,8 @@ function evi2pubmed($evi_keys='', $pubmeds=array()) {
   return $res;
 }
 
-// get phosphorylation and snip information from uniprot
-function get_phos_snip($arr_uni_acc) {
+// get phosphorylation and snp information from uniprot
+function get_phos_snp($arr_uni_acc) {
   $info = array();
   foreach ($arr_uni_acc as $uni_acc) {
 
@@ -195,7 +195,7 @@ function get_phos_snip($arr_uni_acc) {
 }
 
 /**
- * change phosphorylation and snip status to easy flags
+ * change phosphorylation and snp status to easy flags
  * 0 -> none
  * 1 -> probable
  * 2 -> pubmed ids
@@ -217,14 +217,14 @@ function reg_target_info($np_acc, $info=array()) {
 
   $ins_chg_acc = 'insert into t_chg_acc (gene_acc_no, uni_acc_no, sequence) values (?, ?, ?)';
   $ins_phos    = 'insert into t_acc_phospho (uni_acc_no, position, residue_type, reference, status) values (?, ?, ?, ?, ?)';
-  $ins_snip    = 'insert into t_acc_snip (uni_acc_no, position, original, variation, reference, status) values (?, ?, ?, ?, ?, ?)';
+  $ins_snp     = 'insert into t_acc_snp (uni_acc_no, position, original, variation, reference, status) values (?, ?, ?, ?, ?, ?)';
 
   // set each pdo objects
   try {
     $dbh       = set_db();
     $stmt_chg  = $dbh->prepare($ins_chg_acc);
     $stmt_phos = $dbh->prepare($ins_phos);
-    $stmt_snip = $dbh->prepare($ins_snip);
+    $stmt_snp  = $dbh->prepare($ins_snp);
   } catch(PDOException $e) {
     var_dump($e->getMessage());
     exit;
@@ -278,26 +278,26 @@ function reg_target_info($np_acc, $info=array()) {
       echo "error insert t_acc_phospho => ".$e->getMessage();
     }
 
-    //----- insert t_acc_snip
+    //----- insert t_acc_snp
     try {
       if (isset($val['variant'])) {
         foreach($val['variant'] as $position => $tmp) {
           $status = get_status_type($tmp['pubmed_id']);
 
-          $stmt_snip->bindParam(1, $key,              PDO::PARAM_STR);
-          $stmt_snip->bindParam(2, $position,         PDO::PARAM_INT);
-          $stmt_snip->bindParam(3, $tmp['original'],  PDO::PARAM_STR);
-          $stmt_snip->bindParam(4, $tmp['variation'], PDO::PARAM_STR);
-          $stmt_snip->bindParam(5, $tmp['pubmed_id'], PDO::PARAM_STR);
-          $stmt_snip->bindParam(6, $status,           PDO::PARAM_INT);
+          $stmt_snp->bindParam(1, $key,              PDO::PARAM_STR);
+          $stmt_snp->bindParam(2, $position,         PDO::PARAM_INT);
+          $stmt_snp->bindParam(3, $tmp['original'],  PDO::PARAM_STR);
+          $stmt_snp->bindParam(4, $tmp['variation'], PDO::PARAM_STR);
+          $stmt_snp->bindParam(5, $tmp['pubmed_id'], PDO::PARAM_STR);
+          $stmt_snp->bindParam(6, $status,           PDO::PARAM_INT);
 
-          if (!$stmt_snip->execute()) throw new Exception("query execute error\n");
+          if (!$stmt_snp->execute()) throw new Exception("query execute error\n");
         }
       }
     } catch(PDOException $e) {
-      echo "error t_acc_snip =>".$e->getMessage();
+      echo "error t_acc_snp =>".$e->getMessage();
     } catch(Exception $e) {
-      echo "error insert t_acc_snip =>".$e->getMessage();
+      echo "error insert t_acc_snp =>".$e->getMessage();
     }
     
   }
@@ -322,7 +322,7 @@ function get_np_acc($file='') {
         array_push($res, array('gene_acc_no' => $line));
       }
     } else {
-      $sql = 'select gene_acc_no from proteins group by gene_acc_no';
+      $sql  = 'select gene_acc_no from proteins group by gene_acc_no';
       $dbh  = set_db();
       $stmt = $dbh->prepare($sql);
       if (!$stmt->execute()) throw new Exception("query execute error\n");
@@ -359,8 +359,8 @@ function main($file='') {
     // change ncbi acc to uni acc
     $uni_acc = ncbi2uniprot($np_acc);
 
-    // get phospho and snip info
-    $info = get_phos_snip($uni_acc);
+    // get phospho and snp info
+    $info = get_phos_snp($uni_acc);
 
     // regist
     reg_target_info($np_acc, $info);

@@ -23,3 +23,7 @@ uniprotについては[こちら](http://www.uniprot.org/)からアクセスで�
       |                           |__ [variant]  
       |                           |__ [status]  
       |__ [sequence]
+
+### License ###
+    This software is released under the MIT License, see LICENSE.txt.
+

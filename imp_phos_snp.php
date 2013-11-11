@@ -17,6 +17,9 @@
  * @link    https://github.com/tabio/uniprot
  * @auther  tabio <tabio.github@gmail.com>
  * @version 1.0
+ * @license Copyright (c) 2013 tabio
+ *          This software is released under the MIT License.
+ *          http://opensource.org/licenses/mit-license.php
  */
 
 // define

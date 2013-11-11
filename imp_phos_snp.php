@@ -382,7 +382,7 @@ if (isset($opt['f']) && !empty($opt['f'])) {
     $is_file = true;
   } else {
     echo "[warning] check args!!\n";
-    echo "php ".__FILE__." -f file path\n";
+    echo "php ".basename(__FILE__)." -f file path\n";
     exit(1);
   }
 }

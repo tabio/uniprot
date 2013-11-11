@@ -6,6 +6,7 @@
  *
  * [Step 1]
  *   set ncbi accession number lists of target proteins from your database or file.
+ *   => see ddl file (mysql_tbl.ddl) if you want to use mysql database.
  *
  * [Step 2]
  *   execute this script.
@@ -13,7 +14,7 @@
  *   ==>  get phosphorylation and snip information for annotated target protin.
  *   ===> regist these infomation on your database.
  *
- * @auther  tabio <tabio@gmail.com>
+ * @auther  tabio <tabio.github@gmail.com>
  * @version 1.0
  */
 

@@ -5,15 +5,15 @@
  * This program is to get phosphorylation and snip information for target protein on Uniprot web site.
  *
  * [Step 1]
- *   get ncbi accession number of target protein from your database.
+ *   set ncbi accession number lists of target proteins from your database or file.
  *
  * [Step 2]
- *   transfer ncbi accession number to uniprot accesssion number.
+ *   execute this script.
+ *   =>   transfer ncbi accession number to uniprot accesssion number.
+ *   ==>  get phosphorylation and snip information for annotated target protin.
+ *   ===> regist these infomation on your database.
  *
- * [Step 3]
- *   get phosphorylation and snip information for annotated target protin.
- *
- * @auther  tabio <https://github.com/tabio
+ * @auther  tabio <tabio@gmail.com>
  * @version 1.0
  */
 

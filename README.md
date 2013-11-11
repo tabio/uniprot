@@ -4,7 +4,7 @@ uniprotのWebサイトから情報を取得し加工するためのプログラ�
 uniprotについては[こちら](http://www.uniprot.org/)からアクセスできます。
  
 ### 各プログラムの概要 ###
-+ imp_phos_snip.php
+1. imp_phos_snip.php
 - 対象のタンパクのリン酸化・SNIP情報の取得プログラム
   + NCBIのAccession NumberをuniprotのAccession Numberに変換
   + 対象のタンパクに対するリン酸化の情報、SNPの情報を取得

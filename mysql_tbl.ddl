@@ -10,7 +10,7 @@ CREATE TABLE `t_acc_phospho` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 
-CREATE TABLE `t_acc_snip` (
+CREATE TABLE `t_acc_snp` (
   `uni_acc_no` char(32) NOT NULL,
   `position` int(4) NOT NULL,
   `original` char(4) NOT NULL,

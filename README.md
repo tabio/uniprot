@@ -25,5 +25,5 @@ uniprotについては[こちら](http://www.uniprot.org/)からアクセスで�
       |__ [sequence]
 
 ### License ###
-    This software is released under the MIT License, see [LICENSE.txt](https://github.com/tabio/uniprot/blob/master/LICENSE.txt).
+    This software is released under the MIT License, see [LICENSE.txt](https://github.com/tabio/uniprot/blob/master/LICENSE.txt) .
 

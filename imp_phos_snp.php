@@ -17,12 +17,11 @@
  *   ===> regist these infomation on your database.
  *
  * [Etc.]
- * @link    https://github.com/tabio/uniprot
- * @auther  tabio <tabio.github@gmail.com>
- * @version 1.0
- * @license Copyright (c) 2013 tabio
- *          This software is released under the MIT License.
- *          http://opensource.org/licenses/mit-license.php
+ * @link      https://github.com/tabio/uniprot
+ * @auther    tabio <tabio.github@gmail.com>
+ * @version   1.0
+ * @copyright 2013 tabio
+ * @license   http://opensource.org/licenses/bsd-license.php New BSD License
  */
 
 // define

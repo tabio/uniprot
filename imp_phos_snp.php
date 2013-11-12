@@ -20,7 +20,8 @@
  * @link      https://github.com/tabio/uniprot
  * @auther    tabio <tabio.github@gmail.com>
  * @version   1.0
- * @copyright 2013 tabio
+ * @copyright Copyright (c) 2013 tabio
+ *            All rights reserved.
  * @license   http://opensource.org/licenses/bsd-license.php New BSD License
  */
 
